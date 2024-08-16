@@ -81,7 +81,7 @@ public class WebSecurityConfig {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-					.allowedOrigins("*")
+					.allowedOrigins("http://43.200.90.241", "http://43.200.90.241:80")
 					.exposedHeaders("authorization") // 이 부분을 추가합니다.
 					.allowCredentials(true) // 쿠키 인증 요청 허용
 					.allowedHeaders("*")
