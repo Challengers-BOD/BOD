@@ -13,8 +13,8 @@ public class PointRankingResponseDto {
   private String name;
   private long point;
 
-  public PointRankingResponseDto(String name, long point) {
+  public PointRankingResponseDto(String name, double score) {
     this.name = name;
-    this.point = point;
+    this.point = (long) score;
   }
 }
