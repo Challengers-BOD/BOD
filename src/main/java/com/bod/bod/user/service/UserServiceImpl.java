@@ -222,18 +222,24 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<PointRankingResponseDto> getRankingList() {
-	List<User> users = userRepository.findTop10ByOrderByPointDesc();
-
-	List<PointRankingResponseDto> rankingList = users.stream()
-		.map(user -> new PointRankingResponseDto(
-			user.getName(),
-			user.getPoint()
-		))
-		.toList();
-
-	// 순위를 매기고 상위 5명만 반환
-	return sortRanks(rankingList);
+	List<PointRankingResponseDto> rankingList = userRepository.getPointRankingTop5List();
+	return rankingList;
   }
+
+//  @Override
+//  public List<PointRankingResponseDto> getRankingList() {
+//	List<User> users = userRepository.findTop10ByOrderByPointDesc();
+//
+//	List<PointRankingResponseDto> rankingList = users.stream()
+//		.map(user -> new PointRankingResponseDto(
+//			user.getName(),
+//			user.getPoint()
+//		))
+//		.toList();
+//
+//	// 순위를 매기고 상위 5명만 반환
+//	return sortRanks(rankingList);
+//  }
 
 //  @Override
 //  public List<PointRankingResponseDto> getRankingList() {
