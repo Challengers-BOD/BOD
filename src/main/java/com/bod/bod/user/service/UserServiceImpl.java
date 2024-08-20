@@ -226,35 +226,21 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<PointRankingResponseDto> getRankingList() {
-	List<User> users = userRepository.findTop10ByOrderByPointDesc();
-
-	List<PointRankingResponseDto> rankingList = users.stream()
-		.map(user -> new PointRankingResponseDto(
-			user.getName(),
-			user.getPoint()
-		))
+	String key = "ranking";
+	try{
+	ZSetOperations<String, String> stringStringZSetOperations = redisTemplate.opsForZSet();
+	Set<ZSetOperations.TypedTuple<String>> typedTuples = stringStringZSetOperations.reverseRangeWithScores(key, 0, 10);
+	  if (typedTuples.isEmpty()) {
+		throw new GlobalException(ErrorCode.EMPTY_POINT_RANKING_LIST);
+	  }
+	List<PointRankingResponseDto> rankingList = typedTuples.stream()
+		.map(tuple -> new PointRankingResponseDto(tuple.getValue(), tuple.getScore()))
 		.toList();
-
 	return sortRanks(rankingList);
+	} catch (RedisConnectionFailureException e) {
+	  throw new GlobalException(ErrorCode.REDIS_CONNECTION_FAILED);
+	}
   }
-
-//  @Override
-//  public List<PointRankingResponseDto> getRankingList() {
-//	String key = "ranking";
-//	try{
-//	ZSetOperations<String, String> stringStringZSetOperations = redisTemplate.opsForZSet();
-//	Set<ZSetOperations.TypedTuple<String>> typedTuples = stringStringZSetOperations.reverseRangeWithScores(key, 0, 10);
-//	  if (typedTuples.isEmpty()) {
-//		throw new GlobalException(ErrorCode.EMPTY_POINT_RANKING_LIST);
-//	  }
-//	List<PointRankingResponseDto> rankingList = typedTuples.stream()
-//		.map(tuple -> new PointRankingResponseDto(tuple.getValue(), tuple.getScore()))
-//		.toList();
-//	return sortRanks(rankingList);
-//	} catch (RedisConnectionFailureException e) {
-//	  throw new GlobalException(ErrorCode.REDIS_CONNECTION_FAILED);
-//	}
-//  }
 
   @Override
   public User findById(long userId) {

@@ -18,8 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
 	Page<User> findAllByOrderByCreatedAtAsc(Pageable pageable);
 
-  List<User> findTop10ByOrderByPointDesc();
-
 	@Query("SELECT COUNT(u) FROM User u")
 	long countAllUsers();
 
