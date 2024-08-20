@@ -1,6 +1,7 @@
 package com.bod.bod.user.repository;
 
 import com.bod.bod.user.entity.User;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	Optional<User> findByNickname(String nickname);
 
 	Page<User> findAllByOrderByCreatedAtAsc(Pageable pageable);
+
+  List<User> findTop10ByOrderByPointDesc();
 
 	@Query("SELECT COUNT(u) FROM User u")
 	long countAllUsers();
